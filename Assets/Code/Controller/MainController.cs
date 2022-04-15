@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 
 namespace WORLDGAMEDEVELOPMENT
 {
-    internal sealed class MainController : BaseController
+    internal sealed class MainController : Controllers, IDisposable
     {
         #region Fields
 
@@ -12,26 +13,31 @@ namespace WORLDGAMEDEVELOPMENT
 
         private MainMenuController _mainMenuController;
         private GameController _gameController;
+        private InitializationController _initializationController;
 
         #endregion
 
 
         #region ClassLifeCycles
 
-        public MainController(Transform placeForUi, ProfilePlayer profilePlayer)
+        public MainController(Transform placeForUi, InitializationController initializationController)
         {
             _placeForUi = placeForUi;
-            _profilePlayer = profilePlayer;
+            _initializationController = initializationController;
+
+            _profilePlayer = _initializationController.GetProfilePlayer(); ;
+            _profilePlayer.CurrentState.Value = GameState.Start;
+
             OnChangeGameState(_profilePlayer.CurrentState.Value);
             _profilePlayer.CurrentState.SubscriptionOnChange(OnChangeGameState);
         }
 
-        protected override void OnDispose()
+        public void Dispose()
         {
-            _mainMenuController?.Dispose();
-            _gameController?.Dispose();
+            _mainMenuController?.Cleanup();
+            _gameController?.Cleanup();
             _profilePlayer.CurrentState.UnSubscriptionOnChange(OnChangeGameState);
-            base.OnDispose();
+            base.Cleanup();
         }
 
         #endregion
@@ -46,15 +52,15 @@ namespace WORLDGAMEDEVELOPMENT
                 case GameState.Start:
                     _mainMenuController =
                         new MainMenuController(_placeForUi, _profilePlayer);
-                    _gameController?.Dispose();
+                    _gameController?.Cleanup();
                     break;
                 case GameState.Game:
-                    _gameController = new GameController(_placeForUi, _profilePlayer);
-                    _mainMenuController?.Dispose();
+                    _gameController = new GameController(_placeForUi, _initializationController);
+                    _mainMenuController?.Cleanup();
                     break;
                 default:
-                    _gameController?.Dispose();
-                    _mainMenuController?.Dispose();
+                    _gameController?.Cleanup();
+                    _mainMenuController?.Cleanup();
                     break;
             }
         }

@@ -19,7 +19,7 @@ namespace WORLDGAMEDEVELOPMENT
 
 
         #region UnityMethods
-        
+
         private void Awake()
         {
             _data = Resources.Load<Data>(Path.Combine(ManagerPath.DATA, ManagerPath.DATA));
@@ -27,13 +27,8 @@ namespace WORLDGAMEDEVELOPMENT
 
             _initializationController = new InitializationController(_data);
 
-            ProfilePlayer profilePlayer = _initializationController.GetProfilePlayer();
-
-            profilePlayer.CurrentState.Value = GameState.Start;
-
-            _mainController = new MainController(_placeForUi, profilePlayer);
-
-        } 
+            _mainController = new MainController(_placeForUi, _initializationController);
+        }
 
         #endregion
 
@@ -43,7 +38,7 @@ namespace WORLDGAMEDEVELOPMENT
         private void OnDestroy()
         {
             _mainController?.Dispose();
-        } 
+        }
 
         #endregion
     }

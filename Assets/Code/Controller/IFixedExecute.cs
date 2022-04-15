@@ -1,6 +1,7 @@
 ﻿namespace WORLDGAMEDEVELOPMENT
 {
-    internal interface IFixedExecute
+    internal interface IFixedExecute : IController
     {
+        void FixedExecute(float deltaTime);
     }
 }

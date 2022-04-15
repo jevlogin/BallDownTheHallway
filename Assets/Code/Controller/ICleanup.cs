@@ -1,6 +1,7 @@
 ﻿namespace WORLDGAMEDEVELOPMENT
 {
-    internal interface ICleanup
+    internal interface ICleanup : IController
     {
+        void Cleanup();
     }
 }

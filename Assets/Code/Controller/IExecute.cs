@@ -1,6 +1,7 @@
 ﻿namespace WORLDGAMEDEVELOPMENT
 {
-    internal interface IExecute
+    internal interface IExecute : IController
     {
+        void Execute(float deltaTime);
     }
 }

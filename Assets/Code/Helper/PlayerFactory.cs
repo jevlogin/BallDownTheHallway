@@ -25,7 +25,7 @@ namespace WORLDGAMEDEVELOPMENT
 
                 spawnPlayer.GetComponent<MeshRenderer>().sharedMaterial =
                     playerSettings.PlayerMaterial;
-                spawnPlayer.transform.position = 
+                spawnPlayer.transform.position =
                     _playerData.PlayerSettingsData.SpawnPoint.position;
 
                 playerComponents.ColliderPlayer = spawnPlayer.GetOrAddComponent<Collider>();

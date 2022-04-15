@@ -5,16 +5,49 @@ using UnityEngine;
 
 namespace WORLDGAMEDEVELOPMENT
 {
-    internal sealed class GameController : BaseController
+    internal sealed class GameController : Controllers
     {
-        private Transform _placeForUi;
-        private ProfilePlayer _profilePlayer;
+        #region Fields
 
-        public GameController(Transform placeForUi, ProfilePlayer profilePlayer)
+        private readonly Transform _placeForUi;
+        private readonly ProfilePlayer _profilePlayer;
+        private InitializationController _initializationController;
+        private readonly Camera _camera;
+
+        #endregion
+
+
+        #region ClassLifeCycles
+
+        public GameController(Transform placeForUi, InitializationController initializationController)
         {
+            _camera = Camera.main;
             _placeForUi = placeForUi;
-            _profilePlayer = profilePlayer;
+            _initializationController = initializationController;
+            _profilePlayer = _initializationController.GetProfilePlayer();
             _profilePlayer.PlayerModel.PlayerComponents.TransformPlayer.gameObject.SetActive(true);
+
+            var platformFactory = new PlatformFactory(_initializationController.Data.PlatformData);
+            var platformController = new PlatformController(platformFactory);
+            Add(platformController);
+
+            var parallaxManager = new ParallaxManager(_camera);
+
+            //Add(parallaxManager);
+
+
+            var scoreFactory = new ScoreFactory(_initializationController.Data.ScoreData, placeForUi);
+            var scoreController = new ScoreController(scoreFactory.GetScoreView());
+            Add(scoreController);
+
+
+
+            Initialization();
         }
+
+        #endregion
+
+
+
     }
 }

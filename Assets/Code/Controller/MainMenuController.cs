@@ -1,11 +1,12 @@
 ﻿using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 
 namespace WORLDGAMEDEVELOPMENT
 {
-    internal sealed class MainMenuController : BaseController
+    internal sealed class MainMenuController : Controllers
     {
         #region Fields
 
@@ -36,6 +37,7 @@ namespace WORLDGAMEDEVELOPMENT
         private void StartGame()
         {
             _profilePlayer.CurrentState.Value = GameState.Game;
+            _placeForUi.GetComponent<Image>().color = Color.clear;
         }
 
         private T LoadView<T>(Transform parrentPosition, string pathMenu) where T : Component
